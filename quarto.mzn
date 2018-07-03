@@ -31,10 +31,14 @@ function int: n_in_row_array(array[LEN] of int: a, int: len, int: color) =
     max (i in LEN) (n_in_row(a, n, i, color, true));
     
 function int: max_in_row_board(array[LEN,LEN] of int: b, int: width, int: color) =
-    max( array1d(1..4, [max (r in LEN) (n_in_row_array([b[r,c]|c in LEN], width, color)),  % Horizontal
-                        max (c in LEN) (n_in_row_array([b[r,c]|r in LEN], width, color)),  % Vertical
-                                       (n_in_row_array([b[r,c]|r,c in LEN where r == c], width, color)),  % Diagonal
-                                       (n_in_row_array([b[r,c]|r,c in LEN where (r + c) == (width + 1)], width, color))])); % Diagonal
+    let {int: max_horizontal = max (r in LEN) (n_in_row_array(row(b,r), width, color));
+         int: max_vertical   = max (c in LEN) (n_in_row_array([b[r,c]|r in LEN], width, color));
+         int: max_diagonal1  = (n_in_row_array([b[r,c]|r,c in LEN where r == c], width, color));
+         int: max_diagonal2  = (n_in_row_array([b[r,c]|r,c in LEN where (r + c) == (width + 1)], width, color));} in
+    max( array1d(1..4, [max_horizontal,
+                        max_vertical,
+                        max_diagonal1,
+                        max_diagonal2]));
     
 
 var int: points = max_in_row_board(b, n, 1);
