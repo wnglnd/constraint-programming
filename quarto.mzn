@@ -2,14 +2,16 @@
 int: n = 4;
 set of int: LEN = 1..n;
 array[int,int] of int: board_start = array2d(LEN, LEN,
-[|0,0,1,0|
+[|1,0,1,0|
   0,1,0,0|
   1,0,0,0|
   1,1,1,2|]);
 set of int: PDOMAIN = 0..2;
+int: selected_color = 1;
 array[LEN,LEN] of var PDOMAIN: board;
 var 0..n: L;
 
+% Count number of pieces in-a-row in array a starting from index i
 function var int: n_in_row(array[LEN] of var int: a, int: i, int: color, bool: first_run) =
     if i == length(a) then
     0
@@ -25,6 +27,7 @@ function var int: n_in_row(array[LEN] of var int: a, int: i, int: color, bool: f
         endif
     endif;
 
+% Count number of pieces of type color in-a-row in array a
 function var int: n_in_row_array(array[LEN] of var int: a, int: color) =
     max (i in LEN) (n_in_row(a, i, color, true));
     
@@ -48,9 +51,12 @@ constraint forall(r,c in LEN)(
     endif
 );
 
-constraint sum ([1 | r,c in LEN where board[r,c] == 0]) +1 == sum([1 | rs,cs in LEN where board_start[rs,cs] == 0]);
+% Number of empty slots should be one less comparing to the start board.
+constraint sum ([1 | r,c in LEN where board[r,c] == 0]) +1 == sum([1 | r,c in LEN where board_start[r,c] == 0]);
+% Number of slots of selected color should be one more comparing to the start board.
+constraint sum ([1 | r,c in LEN where board[r,c] == selected_color]) == 1+ sum([1 | r,c in LEN where board_start[r,c] == selected_color]);
 
-constraint max_in_row_board(board, 1) > L;
+constraint max_in_row_board(board, selected_color) >= L;
 
 solve maximize L;
 
