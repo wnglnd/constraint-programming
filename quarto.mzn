@@ -48,10 +48,19 @@ constraint forall(r,c in LEN)(
     endif
 );
 
+constraint sum ([1 | r,c in LEN where board[r,c] == 0]) +1 == sum([1 | rs,cs in LEN where board_start[rs,cs] == 0]);
+
 constraint max_in_row_board(board, 1) > L;
 
 solve maximize L;
 
-output ["Board:\n"]  ++
-[show_int(1,board[r,c]) ++ if c mod n == 0 then "\n" else " " endif | r,c in LEN] ++
+output 
+["Intial board:\n"]
+++
+[show_int(1,board_start[r,c]) ++ if c mod n == 0 then "\n" else " " endif | r,c in LEN]
+++
+["Board:\n"]
+++
+[show_int(1,board[r,c]) ++ if c mod n == 0 then "\n" else " " endif | r,c in LEN]
+++
 ["\nL: " ++ show_int(1,L)];
