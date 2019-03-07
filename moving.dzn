@@ -1,0 +1,18 @@
+OBJECTS = { piano, fridge, bed, chair1, chair2, table};
+TASKS = {stairs, lifter};
+no_tasks = 2;
+
+%Rows: objects, columns: tasks
+durations = [|45, 1
+             |15, 1
+             |10, 1
+             |5,  1
+             |5,  1
+             |15, 1|];
+
+handlers_required = [3, 2, 3, 1, 1, 2];
+lifts_required    = [2, 1, 2, 0, 0, 2];
+
+time_available = 180;
+handlers_available = 3;
+lifts_available    = 2;
